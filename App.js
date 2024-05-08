@@ -1,20 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, Button, Text } from 'react-native';
+import axios from 'axios';
 
-export default function App() {
+const App = () => {
+  const [cep, setCep] = useState('');
+  const [address, setAddress] = useState(null);
+
+  const fetchAddress = async () => {
+    try {
+      const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+      setAddress(response.data);
+    } catch (error) {
+      console.error('Error fetching address:', error);
+      setAddress(null);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <TextInput
+        placeholder="Digite o CEP"
+        value={cep}
+        onChangeText={setCep}
+        keyboardType="numeric"
+      />
+      <Button title="Buscar Endereço" onPress={fetchAddress} />
+      {address && (
+        <View>
+          <Text>CEP: {address.cep}</Text>
+          <Text>Rua: {address.logradouro}</Text>
+          <Text>Bairro: {address.bairro}</Text>
+          <Text>Cidade: {address.localidade}</Text>
+          <Text>Estado: {address.uf}</Text>
+        </View>
+      )}
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
