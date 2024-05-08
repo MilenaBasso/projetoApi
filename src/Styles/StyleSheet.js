@@ -7,4 +7,10 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
+  input: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
